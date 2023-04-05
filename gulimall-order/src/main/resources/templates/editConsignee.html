@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>新增</title>
+    <link rel="stylesheet" href="http://order.gulimall.com/static/layui/css/layui.css">
+    <script src="http://order.gulimall.com/static/layui/layui.js"></script>
+    <script src="http://order.gulimall.com/static/layui/layui.all.js"></script>
+    <script src="http://order.gulimall.com/static/order/confirm/js/jquery-3.1.1.min.js"></script>
+</head>
+<body class="layui-layout-body">
+<div style="margin: 20px;">
+    <form id="addAddressForm" class="layui-form" action="">
+        <div class="layui-inline" style="margin-top: 10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">省份/直辖市:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="province" name="province" class="layui-input"
+                           style="float: left;width: 200px"
+                           lay-verify="required" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">市：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="city" name="city" class="layui-input" style="float: left;width: 200px"
+                           lay-verify="required" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">区：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="region" name="region" class="layui-input" style="float: left;width: 200px"
+                           lay-verify="required" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" class="layui-input" style="float: left;width: 200px"
+                           lay-verify="required" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone" class="layui-input" style="float: left;width: 200px"
+                           lay-verify="required" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">详细地址：</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="详细地址" class="layui-textarea" id="detailAddress"
+                              name="detailAddress"
+                              style="width: 300px"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin: 10px 10px 10px 10px">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">确认</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script>
+    const form = layui.form;
+    //监听提交
+    form.on('submit(demo1)', function (data) {
+        const url = `/order/order/saveReceiveAddress`;
+        var data = $("#addAddressForm").serialize();
+        const index = layer.load(1, {
+            shade: [0.5, '#fff']
+        });
+        $.ajax({
+            url: url,
+            data: data,
+            type: "post",
+            success: function (res) {
+                layer.close(index);
+                console.log(JSON.stringify(res))
+                layer.alert("保存成功")
+
+            }
+        })
+        return false;
+    });
+</script>
+</html>

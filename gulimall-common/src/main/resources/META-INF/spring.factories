@@ -1,0 +1,4 @@
+#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+###  com.iflytek.gulimall.coupon.config.GulimallsessionConfiguration,\
+### com.iflytek.gulimall.common.config.MyMetaObjectHandlerConfiguration
+###

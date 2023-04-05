@@ -1,0 +1,94 @@
+ spring:
+  cloud:
+    gateway:
+      routes:
+        #配置商品路http://localhost:88/api/product/category/list/tree  http://127.0.0.1:10002/product/category/list/tree
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+         #配置第三方服务路由  http://127.0.0.1:88/api/thirdparty/oss/policy
+        - id: gulimall_third_party
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+              - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+            #配置优惠券服务
+        - id: coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+              - Path=/api/coupon/**
+          filters:
+              - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        - id: order_route
+          uri: lb://gulimall-order
+          predicates:
+              - Path=/api/order/**
+          filters:
+              - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        - id: member_route
+          uri: lb://gulimall-member
+          predicates:
+              - Path=/api/member/**
+          filters:
+              - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        - id: ware_route
+          uri: lb://gulimall-ware
+          predicates:
+              - Path=/api/ware/**
+          filters:
+              - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        #配置后台路由
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**  # 需要将http://localhost:88/api/captcha.jpg 转到 http://localhost:8080/renren-fast/captcha.jpg
+          filters:  #- RewritePath=/red(?<segment>/?.*), $\{segment} 会将red舍去
+            - RewritePath=/api/(?<segment>/?.*), /renren-fast/$\{segment}  #重写路径逗号前面的是之前的地址,后面是需要转到的地址
+         # 配置gulimall-product的web页面转发 由于gulimall.com的api接口也会匹配此路径 所以需要发放最后
+
+        - id: gulimall_productweb
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+        - id: gulimall_searchweb
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
+        - id: gulimall-auther-server
+          uri: lb://gulimall-auther-server
+          predicates:
+            - Host=auth.gulimall.com
+        - id: gulimall-cart
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
+        - id: gulimall-order
+          uri: lb://gulimall-order
+          predicates:
+             - Host=order.gulimall.com
+        - id: gulimall-member
+          uri: lb://gulimall-member
+          predicates:
+              - Host=member.gulimall.com
+        - id: gulimall-seckill
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.gulimall.com
+    sentinel:
+      transport:
+        port: 8788
+        dashboard: 192.168.56.10:8090
+  application:
+    name: gulimall-gateway
+
+server:
+  port: 88
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

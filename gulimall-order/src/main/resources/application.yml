@@ -1,0 +1,76 @@
+spring:
+  datasource:
+    druid:
+      username: root
+      password: root
+      url: jdbc:mysql://192.168.56.10:3306/gulimall_oms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      min-idle: 5
+      max-active: 100
+  redis:
+    database: 0
+    port: 6379
+    host: 192.168.56.10
+    password: root
+  rabbitmq:
+    host: 192.168.56.10
+    virtual-host: /
+    port: 5672
+    publisher-confirm-type: correlated  # 开启发送端消息抵达Broker确认 使用correlated方式
+    publisher-returns: true # 开启发送端消息抵达Queue确认 消息没有抵达队列会触发此回调
+    template:
+      mandatory: true #只要消息抵达Queue失败，就会异步发送优先回调returnconfirm
+    listener:
+      simple:
+        acknowledge-mode: manual  #消费端手动确认
+  session:
+    store-type: redis
+  thymeleaf:
+    cache: false
+  application:
+    name: gulimall-order
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group
+    sentinel:
+      transport:
+        port: 8725
+        dashboard: 192.168.56.10:8090
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+server:
+  port: 13000
+  servlet:
+    session:
+      timeout: 30m
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+#支付宝支付
+alipay:
+  app_id: 2088241585214956
+  merchant_private_key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCmUxTOwuglhef0l5iKTe3O1aH9z36mV5scYv64erWtmqUBHiM1g+90Jy4gjBWiuJ7IiB32PXRJuON6jVMJAL1K3iu8vTj8zS8NYoGWflXQy4O6oFeph1GG6Zf5eqOi6AtnBZdfO5n+sG1VjO2cLCcmK5QHxYO85DnASX8iGYEaM7znOLchvAxF6n2SqcGKBrCneRlNUbfJiZu6SPBMFv5Hty5bED0Ei4CuGUDNrc72fDl4Fjg+jPUPgAqq2fpoACjaF6MqEnde+FUusGeoSyLQlqchonQyd8rjybjr09OZOi6Yf3ZF/58K6WFp+WrBYZNAL8QxcoT9c0yYw/4JSYuRAgMBAAECggEADZm3ltyrPP5BJGgNCiorKwGfGHESKyn4vg5+Q7mNB6AgpAHB4Utjljzp8bFix4aPPVicEpmd27VprIjH5HGSCQA31Vwnv8xLb63BaPv1qngp0mXwJSWyjfSl/7l+jgCphggYA6qNAh2NIzS97UpS/TUNCsGk7xo+erHH2pL5UpoMr+lEA6RK5WhHxglp/2GtC8GTo6IuJLJzZhXEeGZHMSIqirQHkCIL68jvC8l5i4g1Nhwf3rcr6PBod/SnorUAYOrm3EBh/DgQZYl8H3sNbRB4KaC3owo/2fpfxLsGjmSymPyr/5OF0usZgql8UNGFmPvZy0p9UqtQY8SfFww2wQKBgQDWYBxaeZvJkVuyPc4K7tAewU2iGOilzSbBWsvaIwjxjLwWbJUPt6xymsYgYwhkXMiFstiLnAXS+aX562zB6QV2ANt0J6gtXKZdKP9IUpf+oF0ZeXQ2i0yHFjZEBbCr3mPjTnEIXUzos4G/vquGNMy/0yEIlE9d5uYW0J29/JGxOQKBgQDGnoU4jAXFLgdbfIvXDU3ECX1rligdEwxurHA1unqmlAf1ixeQRa06agjN7lLOWBPgLnZg4Q6UTGPc2h/ODAOUbEIR6P1o4zgw+7auEtAwppqovOsosYphXKL+eM0nwfFVGONXZbw/Rvm9Yx+zPGIS+95mbtWj519AnymBXgIlGQKBgQCEhTthzqU4UKwvnjc92O085eAY4W8H968KfhdgTKIduBMZhZwL8E4hNn5dzPqGGDk5NRraCuQqzHsG6Lr9kA/5J4SB5HX5PLn3Av30dmJRXE7RDZyCj1AKffejyySwyjRTcs07D3oYq8b8gmDEAOXFez2DcTMy6Ca6WdH5fSWPOQKBgCc/9kWpbg58PRn4L85Mo7yEv5M+NikgtYk9bGNBubEnebctSHfLPSNZBupjGVwLjcn0hJI6h14JBocDV9upBiATkK7nYwSSOm17oKsfrqKemduUkcgV5am927v79VbQ/bb6VxrTUPMUPJAPgZky6pKj0VxetLtSIsGrclFNWZEpAoGAevVOh2uT4S208DEr/sSFT1iVSB83nn5qFVmnkwdvmrhj6KCFTC7UvU6ZOxexJG+BpKqZHx9LxMvfIcQxPhkQb5ehoa4XDAC8mihZ1vGZB1KH0Z5T4eOcCAtyhv4FrQFeX5RXAwtzHag3Bl2CO/v4RoaQ4JpTQGWLiSh1FCu63og=
+  alipay_public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxbrxAVNew64w6xY0COGoqRR1h2Rpg9Drd7p2xlrxhGanX7dXIsnWts9uvQhyA1iyqmtnTItDz5cTURlx6vY+yjwrAcr31qdLbeniClmGEtDI4OBaeSuKy7smV35ppsKHgVyvE/v/mVpPfspakHSpR8+0J32Twfncl/3hWAv2HHU0DelZnuTjvYr6PDiV5u+DQqonSpQq2NleRiQIPWgGOXhTj4bqlIlkBNC27lxmAcRl5JmYxyMAOSe1ilD5Aa4TcGUXA1TjbLw32Kk1i4gG3pYvUJPMPrKTyhEffef+hQSGQSZHrCSyNH9bxtvU9RLJL0yo0obqTXcjFbEpysJcFwIDAQAB
+  notify_url: http://h47cf8.natappfree.cc/order/aliPayNotifyUrl
+  return_url: http://member.gulimall.com/myOrderList.html
+  sign_type: RSA2
+  charset: utf-8
+  gatewayUrl: https://openapi.alipay.com/gateway.do
+#微信支付
+wx:
+  appId: wx8397f8696b538317
+  mchId: 1473426802
+  mchKey: T6m9iK73b0kn9g5v426MKfHQH7X8rKwb
+  notifyUrl: http://t3fcjk.natappfree.cc/order/wxPayNotifyUrl
+  returnUrl: http://member.gulimall.com/myOrderList.html
+
+order:
+  timeOut: 2 #订单超时时间,也是支付宝订单超时时间 单位分钟
